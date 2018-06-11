@@ -6,4 +6,38 @@
     android:layout_height="match_parent"
     tools:context="dg.gautam.deepak.notes.AddNotes">
 
+    <EditText
+        android:id="@+id/titleAddNotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:inputType="textCapSentences"
+        android:hint="Title"
+        android:textColor="@color/app_green"
+        android:textColorHint="@color/app_green"
+        android:background="@android:color/transparent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/contentAddNotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:inputType="textCapSentences"
+        android:hint="Content"
+        android:textColorHint="@color/gray"
+        android:background="@android:color/transparent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleAddNotes" />
+
 </android.support.constraint.ConstraintLayout>
