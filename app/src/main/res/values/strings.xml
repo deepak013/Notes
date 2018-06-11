@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Things</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="notes_default">A quick brown fox jumps over the lazy dog.</string>
+    <string name="action_settings">Settings</string>
+</resources>
