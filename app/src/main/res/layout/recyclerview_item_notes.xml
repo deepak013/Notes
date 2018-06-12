@@ -30,6 +30,17 @@
             <!--android:layout_alignParentTop="true"-->
             <!--android:adjustViewBounds="true"-->
             <!--android:scaleType="centerCrop" />-->
+        <TextView
+            android:id="@+id/timestamp"
+            android:text="6th Feb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/noteTitle"
+            android:text="Title"
+            android:layout_below="@id/timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/notes_dashboard_text"
@@ -37,6 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/card_title_margin"
+            android:layout_below="@id/noteTitle"
             android:justificationMode="inter_word"
             android:text="@string/notes_default"
             android:textColor="@color/white" />
