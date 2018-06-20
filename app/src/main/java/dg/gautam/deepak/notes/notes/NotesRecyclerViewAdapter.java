@@ -1,11 +1,15 @@
 package dg.gautam.deepak.notes.notes;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -14,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import dg.gautam.deepak.notes.R;
+import dg.gautam.deepak.notes.RecyclerViewAdapter;
 
 /**
  * Created by sony on 11-06-2018.
@@ -23,16 +28,27 @@ public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecycler
 
     private Context context;
     private List<Note> notesList;
+    private NotesRecyclerViewAdapter.ItemClickListener mClickListener;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public TextView title;
         public TextView note;
-        public TextView dot;
         public TextView timestamp;
+        public CardView cardView;
+        public RelativeLayout relativeLayout;
 
         public MyViewHolder(View view) {
             super(view);
+            title = view.findViewById(R.id.noteTitle);
             note = view.findViewById(R.id.notes_dashboard_text);
             timestamp = view.findViewById(R.id.timestamp);
+            relativeLayout = view.findViewById(R.id.cardRelativeLayout);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
     }
 
@@ -51,14 +67,22 @@ public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecycler
         return new MyViewHolder(itemView);
     }
 
+
+
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Note note = notesList.get(position);
 
+       // holder.title.setText(note.getTitle());
+        holder.title.setText(note.getTitle());
+
         holder.note.setText(note.getContent());
+//        public static int parseColor (String note.getBackground());
+        Log.d("BackgroundColor", "onBindViewHolder: "+note.getBackground());
+        holder.relativeLayout.setBackgroundColor(Color.parseColor(note.getBackground()));
 
         // Displaying dot from HTML character code
-        holder.dot.setText(Html.fromHtml("&#8226;"));
+       // holder.dot.setText(Html.fromHtml("&#8226;"));
 
         // Formatting and displaying timestamp
         holder.timestamp.setText(formatDate(note.getTimestamp()));
@@ -87,4 +111,13 @@ public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecycler
         return "";
     }
 
+    // allows clicks events to be caught
+    public void setClickListener(NotesRecyclerViewAdapter.ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+
+    // parent activity will implement this method to respond to click events
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
+    }
 }

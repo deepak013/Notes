@@ -7,12 +7,12 @@
     tools:context="dg.gautam.deepak.notes.AddNotes">
 
     <EditText
-        android:id="@+id/titleAddNotes"
+        android:id="@+id/editTextTitleAddNotes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:inputType="textCapSentences"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="Title"
         android:textColor="@color/app_green"
         android:textColorHint="@color/app_green"
@@ -25,11 +25,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/contentAddNotes"
+        android:id="@+id/editTextContentAddNotes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:inputType="textCapSentences"
+        android:inputType="textCapSentences|textMultiLine"
         android:hint="Content"
         android:textColorHint="@color/gray"
         android:background="@android:color/transparent"
@@ -38,6 +38,6 @@
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleAddNotes" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTitleAddNotes" />
 
 </android.support.constraint.ConstraintLayout>

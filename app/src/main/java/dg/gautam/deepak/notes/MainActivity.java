@@ -1,6 +1,7 @@
 package dg.gautam.deepak.notes;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,10 +17,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import dg.gautam.deepak.notes.notes.Note;
+import dg.gautam.deepak.notes.notes.NotesDatabaseHelper;
+import dg.gautam.deepak.notes.notes.NotesRecyclerViewAdapter;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, RecyclerViewAdapter.ItemClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, NotesRecyclerViewAdapter.ItemClickListener {
     RecyclerViewAdapter adapter;
+    private NotesDatabaseHelper db;
+    private List<Note> notesList = new ArrayList<>();
+    private  NotesRecyclerViewAdapter madapter;
+    TextView noNotesView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +40,12 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        noNotesView = (TextView)findViewById(R.id.empty_notes_view);
+        //get notes from DB
+        db = new NotesDatabaseHelper(this);
+        //db.onUpgrade(db, 1,2);
+        notesList.addAll(db.getAllNotes());
+        toggleEmptyNotes();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -48,18 +67,28 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // set up the RecyclerView
-        String[] data = {"1", "2", "3", "4", "5", "6"};
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvNumbers);
-        //recyclerView.addItemDecoration(new MarginDecoration(this));
-        recyclerView.setHasFixedSize(true);
+//        // set up the RecyclerView
+//        String[] data = {"1", "2", "3", "4", "5", "6"};
+//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvNumbers);
+//        //recyclerView.addItemDecoration(new MarginDecoration(this));
+//        recyclerView.setHasFixedSize(true);
         int numberOfColumns = 1;
-        //RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+//        //RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+//        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+//        //recyclerView.setLayoutManager(mLayoutManager);
+//        adapter = new RecyclerViewAdapter(this, data);
+//        adapter.setClickListener(this);
+//        recyclerView.setAdapter(adapter);
+
+
+        //set recyclerview
+        madapter = new NotesRecyclerViewAdapter(this, notesList);
+        RecyclerView recyclerView = findViewById(R.id.rvNumbers);
         recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
-        //recyclerView.setLayoutManager(mLayoutManager);
-        adapter = new RecyclerViewAdapter(this, data);
-        adapter.setClickListener(this);
-        recyclerView.setAdapter(adapter);
+        madapter.setClickListener(this);
+        recyclerView.setAdapter(madapter);
+
+
     }
 
     @Override
@@ -121,6 +150,25 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(View view, int position) {
-        Log.i("TAG", "You clicked number " + adapter.getItem(position) + ", which is at cell position " + position);
+        //Log.i("TAG", "You clicked number " + madapter.getItem(position) + ", which is at cell position " + position);
+    }
+
+    private void toggleEmptyNotes() {
+        // you can check notesList.size() > 0
+
+
+        if (db.getNotesCount() > 0) {
+            noNotesView.setVisibility(View.GONE);
+        } else {
+            noNotesView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        notesList.clear();
+        notesList.addAll(db.getAllNotes());
+        madapter.notifyDataSetChanged();
     }
 }
