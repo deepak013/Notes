@@ -1,12 +1,16 @@
 package dg.gautam.deepak.notes;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,15 +28,20 @@ import java.util.List;
 
 import dg.gautam.deepak.notes.notes.Note;
 import dg.gautam.deepak.notes.notes.NotesDatabaseHelper;
+import dg.gautam.deepak.notes.notes.NotesGridLayoutItemDecorator;
 import dg.gautam.deepak.notes.notes.NotesRecyclerViewAdapter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, NotesRecyclerViewAdapter.ItemClickListener {
-    RecyclerViewAdapter adapter;
     private NotesDatabaseHelper db;
     private List<Note> notesList = new ArrayList<>();
     private  NotesRecyclerViewAdapter madapter;
+    RecyclerView recyclerView;
+    SharedPreferences sharedpreferences;
     TextView noNotesView;
+
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    public static final String columnCount = "numberOgColumns";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +81,9 @@ public class MainActivity extends AppCompatActivity
 //        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvNumbers);
 //        //recyclerView.addItemDecoration(new MarginDecoration(this));
 //        recyclerView.setHasFixedSize(true);
-        int numberOfColumns = 1;
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        sharedpreferences.getInt(columnCount,1);
+        int numberOfColumns = sharedpreferences.getInt(columnCount,1);
 //        //RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
 //        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
 //        //recyclerView.setLayoutManager(mLayoutManager);
@@ -83,8 +94,9 @@ public class MainActivity extends AppCompatActivity
 
         //set recyclerview
         madapter = new NotesRecyclerViewAdapter(this, notesList);
-        RecyclerView recyclerView = findViewById(R.id.rvNumbers);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        recyclerView = findViewById(R.id.rvNumbers);
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(numberOfColumns, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setHasFixedSize(true);
         madapter.setClickListener(this);
         recyclerView.setAdapter(madapter);
 
@@ -105,6 +117,17 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        sharedpreferences.getInt(columnCount,1);
+        int numberOfColumns = sharedpreferences.getInt(columnCount,1);
+        if(numberOfColumns==2){
+            menu.findItem(R.id.action_single_column).setVisible(true);
+            menu.findItem(R.id.action_two_column).setVisible(false);
+        }
+        else{
+            menu.findItem(R.id.action_single_column).setVisible(false);
+            menu.findItem(R.id.action_two_column).setVisible(true);
+        }
         return true;
     }
 
@@ -118,6 +141,24 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if(id == R.id.action_two_column){
+            sharedpreferences = getSharedPreferences("ColumnCount", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            int numberOfColumns = sharedpreferences.getInt(columnCount,1);
+            if(numberOfColumns ==1) {
+                editor.putInt(columnCount, 2);
+                editor.apply();
+                numberOfColumns =2;
+                MainActivity.this.invalidateOptionsMenu();
+            }
+            else{
+                editor.putInt(columnCount, 1);
+                editor.apply();
+                numberOfColumns =1;
+                MainActivity.this.invalidateOptionsMenu();
+            }
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(numberOfColumns, StaggeredGridLayoutManager.VERTICAL));
         }
 
         return super.onOptionsItemSelected(item);
