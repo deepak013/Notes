@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity
 //        //recyclerView.addItemDecoration(new MarginDecoration(this));
 //        recyclerView.setHasFixedSize(true);
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        sharedpreferences.getInt(columnCount,1);
         int numberOfColumns = sharedpreferences.getInt(columnCount,1);
 //        //RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
 //        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
@@ -148,13 +147,14 @@ public class MainActivity extends AppCompatActivity
             int numberOfColumns = sharedpreferences.getInt(columnCount,1);
             if(numberOfColumns ==1) {
                 editor.putInt(columnCount, 2);
-                editor.apply();
+                editor.commit();
                 numberOfColumns =2;
+                Log.d("columnCount", "onOptionsItemSelected: "+sharedpreferences.getInt(columnCount,1));
                 MainActivity.this.invalidateOptionsMenu();
             }
             else{
                 editor.putInt(columnCount, 1);
-                editor.apply();
+                editor.commit();
                 numberOfColumns =1;
                 MainActivity.this.invalidateOptionsMenu();
             }
