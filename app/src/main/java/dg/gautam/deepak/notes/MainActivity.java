@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
@@ -38,10 +39,11 @@ public class MainActivity extends AppCompatActivity
     private  NotesRecyclerViewAdapter madapter;
     RecyclerView recyclerView;
     SharedPreferences sharedpreferences;
+    private int numberOfColumns;
     TextView noNotesView;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
-    public static final String columnCount = "numberOgColumns";
+    public static final String columnCount = "numberOfColumns";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         noNotesView = (TextView)findViewById(R.id.empty_notes_view);
+        sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        numberOfColumns = sharedpreferences.getInt(columnCount,1);
         //get notes from DB
         db = new NotesDatabaseHelper(this);
         //db.onUpgrade(db, 1,2);
@@ -81,8 +85,8 @@ public class MainActivity extends AppCompatActivity
 //        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvNumbers);
 //        //recyclerView.addItemDecoration(new MarginDecoration(this));
 //        recyclerView.setHasFixedSize(true);
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        int numberOfColumns = sharedpreferences.getInt(columnCount,1);
+
+        Log.d("columnCount", "onOptionsItemSelected: "+sharedpreferences.getInt(columnCount,1));
 //        //RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
 //        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
 //        //recyclerView.setLayoutManager(mLayoutManager);
@@ -99,11 +103,11 @@ public class MainActivity extends AppCompatActivity
         madapter.setClickListener(this);
         recyclerView.setAdapter(madapter);
 
-
     }
 
     @Override
     public void onBackPressed() {
+        shaveColumnCount();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -116,17 +120,17 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        sharedpreferences = this.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         sharedpreferences.getInt(columnCount,1);
         int numberOfColumns = sharedpreferences.getInt(columnCount,1);
-        if(numberOfColumns==2){
-            menu.findItem(R.id.action_single_column).setVisible(true);
-            menu.findItem(R.id.action_two_column).setVisible(false);
-        }
-        else{
-            menu.findItem(R.id.action_single_column).setVisible(false);
-            menu.findItem(R.id.action_two_column).setVisible(true);
-        }
+//        if(numberOfColumns==2){
+//            menu.findItem(R.id.action_single_column).setVisible(true);
+//            menu.findItem(R.id.action_two_column).setVisible(false);
+//        }
+//        else{
+//            menu.findItem(R.id.action_single_column).setVisible(false);
+//            menu.findItem(R.id.action_two_column).setVisible(true);
+//        }
         return true;
     }
 
@@ -142,21 +146,22 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         if(id == R.id.action_two_column){
-            sharedpreferences = getSharedPreferences("ColumnCount", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            int numberOfColumns = sharedpreferences.getInt(columnCount,1);
+//            sharedpreferences = this.getSharedPreferences("ColumnCount", Context.MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sharedpreferences.edit();
+//            int numberOfColumns = sharedpreferences.getInt(columnCount,1);
             if(numberOfColumns ==1) {
-                editor.putInt(columnCount, 2);
-                editor.commit();
+//                editor.putInt(columnCount, 2);
+//                editor.apply();
                 numberOfColumns =2;
                 Log.d("columnCount", "onOptionsItemSelected: "+sharedpreferences.getInt(columnCount,1));
-                MainActivity.this.invalidateOptionsMenu();
+                //MainActivity.this.invalidateOptionsMenu();
             }
             else{
-                editor.putInt(columnCount, 1);
-                editor.commit();
+//                editor.putInt(columnCount, 1);
+//                editor.apply();
                 numberOfColumns =1;
-                MainActivity.this.invalidateOptionsMenu();
+                Log.d("columnCount", "onOptionsItemSelected: "+sharedpreferences.getInt(columnCount,1));
+                //MainActivity.this.invalidateOptionsMenu();
             }
             recyclerView.setLayoutManager(new StaggeredGridLayoutManager(numberOfColumns, StaggeredGridLayoutManager.VERTICAL));
         }
@@ -211,5 +216,20 @@ public class MainActivity extends AppCompatActivity
         notesList.clear();
         notesList.addAll(db.getAllNotes());
         madapter.notifyDataSetChanged();
+        noNotesView = (TextView)findViewById(R.id.empty_notes_view);
+        toggleEmptyNotes();
+    }
+
+    public void onStop(){
+        shaveColumnCount();
+        super.onStop();
+    }
+
+    public void shaveColumnCount(){
+        sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putInt(columnCount, numberOfColumns);
+        editor.apply();
+        return;
     }
 }

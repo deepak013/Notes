@@ -31,6 +31,12 @@
         android:textSize="18sp"
         android:inputType="textCapSentences|textMultiLine"
         android:hint="Content"
+        android:enabled="true"
+        android:minLines="1"
+        android:maxLines="9"
+        android:isScrollContainer="true"
+        android:scrollbars="vertical"
+        android:backgroundTint="@color/light_green_primary"
         android:textColorHint="@color/gray"
         android:background="@android:color/transparent"
         android:layout_marginEnd="16dp"
@@ -39,5 +45,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTitleAddNotes" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="900dp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextContentAddNotes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_info_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Edited Jun 22, 19:08"
+            android:textColor="@color/blue_primary"
+            android:textSize="18sp" />
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

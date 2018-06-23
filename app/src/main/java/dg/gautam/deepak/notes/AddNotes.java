@@ -52,16 +52,7 @@ public class AddNotes extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                String titleString = titleEditText.getText().toString();
-                String contentString = contentEditText.getText().toString();
-                Random rand = new Random();
-                int randomNum= rand.nextInt(8);
-                if(contentString.trim().equals("")){
-                    Toast.makeText(getApplicationContext(), "Note Content cant be empty", Toast.LENGTH_SHORT).show();
-                    this.finish();
-                    return  true;
-                }
-                createNote(titleString, contentString, hexColorArray[randomNum]);
+                makeNote();
                 this.finish();
                 return true;
             default:
@@ -89,5 +80,21 @@ public class AddNotes extends AppCompatActivity {
         }
     }
 
+    public void onBackPressed() {
+        makeNote();
+        super.onBackPressed();
+    }
+
+    public void makeNote(){
+        String titleString = titleEditText.getText().toString();
+        String contentString = contentEditText.getText().toString();
+        Random rand = new Random();
+        int randomNum= rand.nextInt(8);
+        if(contentString.trim().equals("")){
+            Toast.makeText(getApplicationContext(), "Note Content cant be empty", Toast.LENGTH_SHORT).show();
+            return ;
+        }
+        createNote(titleString, contentString, hexColorArray[randomNum]);
+    }
 
 }
