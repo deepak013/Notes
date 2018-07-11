@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,12 +17,10 @@
         android:textColor="@color/app_green"
         android:textColorHint="@color/app_green"
         android:background="@android:color/transparent"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_alignParentLeft="true"
+        />
 
     <EditText
         android:id="@+id/editTextContentAddNotes"
@@ -39,22 +37,22 @@
         android:backgroundTint="@color/light_green_primary"
         android:textColorHint="@color/gray"
         android:background="@android:color/transparent"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTitleAddNotes" />
+        android:layout_below="@id/editTextTitleAddNotes"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentLeft="true"/>
 
     <RelativeLayout
+        android:id="@+id/bottomViewGroup"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginTop="900dp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextContentAddNotes"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentBottom="true">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"/>
 
         <ImageView
             android:layout_width="30dp"
@@ -73,4 +71,4 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>
