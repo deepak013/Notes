@@ -44,4 +44,6 @@
     <dimen name="big_activity_margin_horizontal">72dp</dimen>
     <dimen name="big_activity_fab_margin">16dp</dimen>
     <dimen name="big_activity_text_margin">16dp</dimen>
+    <dimen name="padd_10">10dp</dimen>
+    <dimen name="ic_delete">30dp</dimen>
 </resources>

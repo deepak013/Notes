@@ -1,17 +1,17 @@
 package dg.gautam.deepak.notes;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -29,16 +29,17 @@ import java.util.List;
 
 import dg.gautam.deepak.notes.notes.Note;
 import dg.gautam.deepak.notes.notes.NotesDatabaseHelper;
-import dg.gautam.deepak.notes.notes.NotesGridLayoutItemDecorator;
 import dg.gautam.deepak.notes.notes.NotesRecyclerViewAdapter;
+import dg.gautam.deepak.notes.notes.RecyclerItemTouchHelper;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, NotesRecyclerViewAdapter.ItemClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, NotesRecyclerViewAdapter.ItemClickListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     private NotesDatabaseHelper db;
     private List<Note> notesList = new ArrayList<>();
     private  NotesRecyclerViewAdapter madapter;
     RecyclerView recyclerView;
     SharedPreferences sharedpreferences;
+    DrawerLayout drawerLayout;
     private int numberOfColumns;
     TextView noNotesView;
 
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        drawerLayout = findViewById(R.id.drawer_layout);
         noNotesView = (TextView)findViewById(R.id.empty_notes_view);
         sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         numberOfColumns = sharedpreferences.getInt(columnCount,1);
@@ -102,6 +104,14 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setHasFixedSize(true);
         madapter.setClickListener(this);
         recyclerView.setAdapter(madapter);
+
+        // adding item touch helper
+        // only ItemTouchHelper.LEFT added to detect Right to Left swipe
+        // if you want both Right -> Left and Left -> Right
+        // add pass ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT as param
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
 
     }
 
@@ -231,5 +241,39 @@ public class MainActivity extends AppCompatActivity
         editor.putInt(columnCount, numberOfColumns);
         editor.apply();
         return;
+    }
+
+    /**
+     * callback when recycler view is swiped
+     * item will be removed on swiped
+     * undo option will be provided in snackbar to restore the item
+     */
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof NotesRecyclerViewAdapter.MyViewHolder) {
+            // get the removed item name to display it in snack bar
+            String name = notesList.get(viewHolder.getAdapterPosition()).getTitle();
+
+            // backup of removed item for undo purpose
+            final Note deletedItem = notesList.get(viewHolder.getAdapterPosition());
+            final int deletedIndex = viewHolder.getAdapterPosition();
+
+            // remove the item from recycler view
+            madapter.removeItem(viewHolder.getAdapterPosition());
+
+            // showing snack bar with Undo option
+            Snackbar snackbar = Snackbar
+                    .make(drawerLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // undo is selected, restore the deleted item
+                    madapter.restoreItem(deletedItem, deletedIndex);
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
+        }
     }
 }
