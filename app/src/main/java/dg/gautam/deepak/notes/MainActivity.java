@@ -259,7 +259,9 @@ public class MainActivity extends AppCompatActivity
             final int deletedIndex = viewHolder.getAdapterPosition();
 
             // remove the item from recycler view
+            db.deleteNote(deletedItem);
             madapter.removeItem(viewHolder.getAdapterPosition());
+
 
             // showing snack bar with Undo option
             Snackbar snackbar = Snackbar
