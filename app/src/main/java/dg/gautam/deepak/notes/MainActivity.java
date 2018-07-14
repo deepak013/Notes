@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawerLayout;
     private int numberOfColumns;
     TextView noNotesView;
+    private  Menu menu;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String columnCount = "numberOfColumns";
@@ -82,19 +84,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        // set up the RecyclerView
-//        String[] data = {"1", "2", "3", "4", "5", "6"};
-//        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvNumbers);
-//        //recyclerView.addItemDecoration(new MarginDecoration(this));
-//        recyclerView.setHasFixedSize(true);
 
         Log.d("columnCount", "onOptionsItemSelected: "+sharedpreferences.getInt(columnCount,1));
-//        //RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-//        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
-//        //recyclerView.setLayoutManager(mLayoutManager);
-//        adapter = new RecyclerViewAdapter(this, data);
-//        adapter.setClickListener(this);
-//        recyclerView.setAdapter(adapter);
 
 
         //set recyclerview
@@ -130,17 +121,13 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        sharedpreferences = this.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        sharedpreferences.getInt(columnCount,1);
-        int numberOfColumns = sharedpreferences.getInt(columnCount,1);
-//        if(numberOfColumns==2){
-//            menu.findItem(R.id.action_single_column).setVisible(true);
-//            menu.findItem(R.id.action_two_column).setVisible(false);
-//        }
-//        else{
-//            menu.findItem(R.id.action_single_column).setVisible(false);
-//            menu.findItem(R.id.action_two_column).setVisible(true);
-//        }
+        MenuItem item = menu.findItem(R.id.action_two_column);
+        if(numberOfColumns==2){
+            item.setIcon(getResources().getDrawable(R.drawable.ic_view_stream));
+        }
+        else{
+            item.setIcon(getResources().getDrawable(R.drawable.ic_view_quilt));
+        }
         return true;
     }
 
@@ -156,22 +143,15 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         if(id == R.id.action_two_column){
-//            sharedpreferences = this.getSharedPreferences("ColumnCount", Context.MODE_PRIVATE);
-//            SharedPreferences.Editor editor = sharedpreferences.edit();
-//            int numberOfColumns = sharedpreferences.getInt(columnCount,1);
             if(numberOfColumns ==1) {
-//                editor.putInt(columnCount, 2);
-//                editor.apply();
                 numberOfColumns =2;
+                item.setIcon(getResources().getDrawable(R.drawable.ic_view_stream));
                 Log.d("columnCount", "onOptionsItemSelected: "+sharedpreferences.getInt(columnCount,1));
-                //MainActivity.this.invalidateOptionsMenu();
             }
             else{
-//                editor.putInt(columnCount, 1);
-//                editor.apply();
                 numberOfColumns =1;
+                item.setIcon(getResources().getDrawable(R.drawable.ic_view_quilt));
                 Log.d("columnCount", "onOptionsItemSelected: "+sharedpreferences.getInt(columnCount,1));
-                //MainActivity.this.invalidateOptionsMenu();
             }
             recyclerView.setLayoutManager(new StaggeredGridLayoutManager(numberOfColumns, StaggeredGridLayoutManager.VERTICAL));
         }
@@ -188,10 +168,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
 
@@ -272,6 +248,9 @@ public class MainActivity extends AppCompatActivity
 
                     // undo is selected, restore the deleted item
                     madapter.restoreItem(deletedItem, deletedIndex);
+                    if(deletedIndex == 0) {
+                        recyclerView.smoothScrollToPosition(0);
+                    }
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);
