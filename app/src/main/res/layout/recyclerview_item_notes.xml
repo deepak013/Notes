@@ -69,12 +69,12 @@
             style="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/white"
             android:layout_marginLeft="10dp"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/timestamp"
-            android:text="6th Feb"
            android:textSize="18sp"
             android:layout_marginRight="4dp"
             android:layout_width="wrap_content"
@@ -95,44 +95,6 @@
             android:justificationMode="inter_word"
             android:text="@string/notes_default"
             android:textColor="@color/white" />
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_below="@id/notes_dashboard_text"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:padding="@dimen/card_button_margin">-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/img_main_card41_favorite"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:background="?attr/selectableItemBackgroundBorderless"-->
-                <!--android:clickable="true"-->
-                <!--android:padding="2dp"-->
-                <!--android:src="@drawable/ic_favorite_border_black_24dp" />-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/img_main_card41_bookmark"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:background="?attr/selectableItemBackgroundBorderless"-->
-                <!--android:clickable="true"-->
-                <!--android:padding="2dp"-->
-                <!--android:src="@drawable/outline_delete_black_24" />-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/img_main_card41_share"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:background="?attr/selectableItemBackgroundBorderless"-->
-                <!--android:clickable="true"-->
-                <!--android:padding="2dp"-->
-                <!--android:src="@drawable/ic_share_black_24dp" />-->
-        <!--</LinearLayout>-->
 
     </RelativeLayout>
 

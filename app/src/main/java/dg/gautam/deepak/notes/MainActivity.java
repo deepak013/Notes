@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -37,12 +38,13 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, NotesRecyclerViewAdapter.ItemClickListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     private NotesDatabaseHelper db;
     private List<Note> notesList = new ArrayList<>();
-    private  NotesRecyclerViewAdapter madapter;
+    private  NotesRecyclerViewAdapter madapter, madapter1;
     RecyclerView recyclerView;
     SharedPreferences sharedpreferences;
     DrawerLayout drawerLayout;
     private int numberOfColumns;
     TextView noNotesView;
+    TextView timeStamp;
     private  Menu menu;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
@@ -55,9 +57,11 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         noNotesView = (TextView)findViewById(R.id.empty_notes_view);
         sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         numberOfColumns = sharedpreferences.getInt(columnCount,1);
+        timeStamp = findViewById(R.id.timestamp);
         //get notes from DB
         db = new NotesDatabaseHelper(this);
         //db.onUpgrade(db, 1,2);
@@ -91,10 +95,10 @@ public class MainActivity extends AppCompatActivity
         //set recyclerview
         madapter = new NotesRecyclerViewAdapter(this, notesList);
         recyclerView = findViewById(R.id.rvNumbers);
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(numberOfColumns, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setHasFixedSize(true);
         madapter.setClickListener(this);
         recyclerView.setAdapter(madapter);
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(numberOfColumns, StaggeredGridLayoutManager.VERTICAL));
 
         // adding item touch helper
         // only ItemTouchHelper.LEFT added to detect Right to Left swipe

@@ -1,32 +1,38 @@
 package dg.gautam.deepak.notes;
 
+import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jaredrummler.android.colorpicker.ColorPickerDialog;
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import dg.gautam.deepak.notes.notes.Note;
 import dg.gautam.deepak.notes.notes.NotesDatabaseHelper;
 import dg.gautam.deepak.notes.notes.NotesRecyclerViewAdapter;
 
-public class AddNotes extends AppCompatActivity {
+public class AddNotes extends AppCompatActivity implements ColorPickerDialogListener {
     NotesDatabaseHelper db;
     private NotesRecyclerViewAdapter mAdapter;
     private List<Note> notesList = new ArrayList<>();
     EditText titleEditText;
     EditText contentEditText;
     String hexColorArray[]={"#F7786B", "#91A8D0", "#98DDDE", "#009B77", "#9B2335", "#4C6A92", "#92B6D5", "#B76BA3"};
+    private static final int DIALOG_ID = 0;
+    TextView lastEditedText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,10 @@ public class AddNotes extends AppCompatActivity {
         contentEditText = findViewById(R.id.editTextContentAddNotes);
         db = new NotesDatabaseHelper(this);
         mAdapter = new NotesRecyclerViewAdapter(this, notesList);
+        lastEditedText=findViewById(R.id.lastEditedTextView);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, hh:mm aaa");
+        String currentDateandTime = sdf.format(new Date());
+        lastEditedText.setText("Edited "+currentDateandTime.toString());
 
     }
 
@@ -55,6 +65,14 @@ public class AddNotes extends AppCompatActivity {
                 makeNote();
                 this.finish();
                 return true;
+            case R.id.color_picker_menu:
+                ColorPickerDialog.newBuilder()
+                        .setDialogType(ColorPickerDialog.STYLE_NORMAL)
+                        .setAllowPresets(false)
+                        .setDialogId(DIALOG_ID)
+                        .setColor(Color.BLACK)
+                        .setShowAlphaSlider(true)
+                        .show(this);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -95,6 +113,19 @@ public class AddNotes extends AppCompatActivity {
             return ;
         }
         createNote(titleString, contentString, hexColorArray[randomNum]);
+    }
+
+    @Override public void onColorSelected(int dialogId, int color) {
+        switch (dialogId) {
+            case DIALOG_ID:
+                // We got result from the dialog that is shown when clicking on the icon in the action bar.
+                Toast.makeText(AddNotes.this, "Selected Color: #" + Integer.toHexString(color), Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    @Override public void onDialogDismissed(int dialogId) {
+
     }
 
 }

@@ -157,5 +157,13 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(note.getId())});
         db.close();
     }
+
+    public void sendNoteToTrash(Note note){
+        //make isInTrash = true
+    }
+
+    public void toggleFavourite(Note note){
+        //make isFavorite = true
+    }
 }
 

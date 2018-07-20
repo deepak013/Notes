@@ -2,7 +2,9 @@ package dg.gautam.deepak.notes.notes;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +21,8 @@ import java.util.List;
 
 import dg.gautam.deepak.notes.R;
 
+import static dg.gautam.deepak.notes.MainActivity.columnCount;
+
 /**
  * Created by sony on 11-06-2018.
  */
@@ -28,11 +32,12 @@ public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecycler
     private Context context;
     private List<Note> notesList;
     private NotesRecyclerViewAdapter.ItemClickListener mClickListener;
+    SharedPreferences sharedpreferences;
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView title;
         public TextView note;
-        public TextView timestamp;
+        //public TextView timestamp;
         public CardView cardView;
         public RelativeLayout viewForeground;
 
@@ -40,7 +45,7 @@ public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecycler
             super(view);
             title = view.findViewById(R.id.noteTitle);
             note = view.findViewById(R.id.notes_dashboard_text);
-            timestamp = view.findViewById(R.id.timestamp);
+            //timestamp = view.findViewById(R.id.timestamp);
             viewForeground = view.findViewById(R.id.cardRelativeLayout);
             view.setOnClickListener(this);
         }
@@ -55,7 +60,6 @@ public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecycler
     public NotesRecyclerViewAdapter(Context context, List<Note> notesList) {
         this.context = context;
         this.notesList = notesList;
-
     }
 
     @Override
@@ -84,7 +88,9 @@ public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecycler
        // holder.dot.setText(Html.fromHtml("&#8226;"));
 
         // Formatting and displaying timestamp
-        holder.timestamp.setText(formatDate(note.getTimestamp()));
+        sharedpreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int numberOfColumns = sharedpreferences.getInt(columnCount,1);
+        //holder.timestamp.setText(formatDate(note.getTimestamp()));
     }
 
     @Override
