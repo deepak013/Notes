@@ -265,7 +265,7 @@ public class MainActivity extends AppCompatActivity
 
             // showing snack bar with Undo option
             Snackbar snackbar = Snackbar
-                    .make(drawerLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
+                    .make(drawerLayout, name + " removed from list!", Snackbar.LENGTH_LONG);
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

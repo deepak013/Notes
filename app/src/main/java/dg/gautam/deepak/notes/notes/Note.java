@@ -14,13 +14,18 @@ public class Note implements Serializable{
     public static final String COLUMN_CONTENT = "content";
     public static final String COLUMN_TIMESTAMP = "timestamp";
     public static final String COLUMN_BACKGROUND = "background";
+    public static final String COLUMN_ISFAVOURITE = "isFavorite";
+    public static final String COLUMN_ISINTRASH = "isInTrash";
+    public static final String COLUMN_ISDELETED = "isDeleted";
 
     private int id;
     private String content;
     private String title;
     private String timestamp;
     private  String background;
-
+    private Boolean isFavourite;
+    private Boolean isInTrash;
+    private  Boolean isDeleted;
 
     // Create table SQL query
     public static final String CREATE_TABLE =

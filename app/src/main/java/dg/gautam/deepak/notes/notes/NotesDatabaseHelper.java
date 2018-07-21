@@ -142,7 +142,7 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(Note.COLUMN_TITLE, note.getContent());
+        values.put(Note.COLUMN_TITLE, note.getTitle());
         values.put(Note.COLUMN_CONTENT, note.getContent());
         values.put(Note.COLUMN_BACKGROUND, note.getBackground());
 
