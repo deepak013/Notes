@@ -25,17 +25,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import dg.gautam.deepak.notes.notes.Note;
 import dg.gautam.deepak.notes.notes.NotesDatabaseHelper;
+import dg.gautam.deepak.notes.notes.NotesRecyclerTouchListener;
 import dg.gautam.deepak.notes.notes.NotesRecyclerViewAdapter;
 import dg.gautam.deepak.notes.notes.RecyclerItemTouchHelper;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, NotesRecyclerViewAdapter.ItemClickListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+        implements NavigationView.OnNavigationItemSelectedListener, NotesRecyclerViewAdapter.ItemClickListener,
+        RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
     private NotesDatabaseHelper db;
     private List<Note> notesList = new ArrayList<>();
     private  NotesRecyclerViewAdapter madapter, madapter1;
@@ -106,6 +110,22 @@ public class MainActivity extends AppCompatActivity
         // add pass ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT as param
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
+        recyclerView.addOnItemTouchListener(new NotesRecyclerTouchListener(getApplicationContext(), recyclerView, new NotesRecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Note note = notesList.get(position);
+                Intent intent = new Intent(getApplicationContext(), EditNotesActivity.class);
+                intent.putExtra("note", note);
+                startActivity(intent);
+                Toast.makeText(getApplicationContext(), note.getTitle() + " is selected!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
 
 
     }
@@ -261,4 +281,6 @@ public class MainActivity extends AppCompatActivity
             snackbar.show();
         }
     }
+
+
 }

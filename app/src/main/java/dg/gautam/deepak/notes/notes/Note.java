@@ -1,10 +1,12 @@
 package dg.gautam.deepak.notes.notes;
 
+import java.io.Serializable;
+
 /**
  * Created by sony on 11-06-2018.
  */
 
-public class Note {
+public class Note implements Serializable{
     public static final String TABLE_NAME = "notes";
 
     public static final String COLUMN_ID = "id";
