@@ -27,6 +27,7 @@ import dg.gautam.deepak.notes.notes.NotesRecyclerViewAdapter;
 public class AddNotes extends AppCompatActivity implements ColorPickerDialogListener {
     NotesDatabaseHelper db;
     private NotesRecyclerViewAdapter mAdapter;
+    private Note note;
     private List<Note> notesList = new ArrayList<>();
     EditText titleEditText;
     EditText contentEditText;
@@ -49,6 +50,7 @@ public class AddNotes extends AppCompatActivity implements ColorPickerDialogList
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, hh:mm aaa");
         String currentDateandTime = sdf.format(new Date());
         lastEditedText.setText("Edited "+currentDateandTime.toString());
+        note = new Note();
 
     }
 
@@ -78,11 +80,11 @@ public class AddNotes extends AppCompatActivity implements ColorPickerDialogList
         }
     }
 
-    private void createNote(String title, String content, String hexColor) {
+    private void createNote() {
         // inserting note in db and getting
         // newly inserted note id
-        Log.d("title_error", "createNote: "+title);
-        long id = db.insertNote(title, content, hexColor);
+        Log.d("title_error", "createNote: "+note.getTitle());
+        long id = db.insertNote(note);
 
         // get the newly inserted note from db
         Note n = db.getNote(id);
@@ -106,13 +108,16 @@ public class AddNotes extends AppCompatActivity implements ColorPickerDialogList
     public void makeNote(){
         String titleString = titleEditText.getText().toString();
         String contentString = contentEditText.getText().toString();
+        note.setTitle(titleString);
+        note.setContent(contentString);
         Random rand = new Random();
         int randomNum= rand.nextInt(8);
+        note.setBackground(hexColorArray[randomNum]);
         if(contentString.trim().equals("")){
             Toast.makeText(getApplicationContext(), "Note Content cant be empty", Toast.LENGTH_SHORT).show();
             return ;
         }
-        createNote(titleString, contentString, hexColorArray[randomNum]);
+        createNote();
     }
 
     @Override public void onColorSelected(int dialogId, int color) {

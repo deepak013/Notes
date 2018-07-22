@@ -258,9 +258,8 @@ public class MainActivity extends AppCompatActivity
             final Note deletedItem = notesList.get(viewHolder.getAdapterPosition());
             final int deletedIndex = viewHolder.getAdapterPosition();
 
-            // remove the item from recycler view
-            db.deleteNote(deletedItem);
             madapter.removeItem(viewHolder.getAdapterPosition());
+            toggleEmptyNotes();
 
 
             // showing snack bar with Undo option
@@ -272,9 +271,19 @@ public class MainActivity extends AppCompatActivity
 
                     // undo is selected, restore the deleted item
                     madapter.restoreItem(deletedItem, deletedIndex);
+                    toggleEmptyNotes();
                     if(deletedIndex == 0) {
                         recyclerView.smoothScrollToPosition(0);
                     }
+                }
+            }).addCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int dismissType) {
+                    super.onDismissed(snackbar, dismissType);
+
+                    if(dismissType == DISMISS_EVENT_TIMEOUT || dismissType == DISMISS_EVENT_SWIPE
+                            || dismissType == DISMISS_EVENT_CONSECUTIVE || dismissType == DISMISS_EVENT_MANUAL)
+                        db.deleteNote(deletedItem);  //delete from database if undo is not pressed
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);

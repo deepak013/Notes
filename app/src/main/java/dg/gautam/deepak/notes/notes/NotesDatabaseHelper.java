@@ -45,17 +45,21 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insertNote(String title, String content, String background) {
+    public long insertNote(Note note) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         // `id` and `timestamp` will be inserted automatically.
         // no need to add them
-        Log.d("title_debug_notesdb", "createNote: "+title);
-        values.put(Note.COLUMN_TITLE,title);
-        values.put(Note.COLUMN_CONTENT,content );
-        values.put(Note.COLUMN_BACKGROUND,background);
+        Log.d("title_debug_notesdb", "createNote: "+note.getTitle());
+        values.put(Note.COLUMN_TITLE,note.getTitle());
+        values.put(Note.COLUMN_CONTENT,note.getContent() );
+        values.put(Note.COLUMN_BACKGROUND,note.getBackground());
+        Log.d("timestamp....", "createNote: "+note.getTimestamp());
+//        if(note.getTimestamp()!=null){  //code to handle undo delete case
+//            values.put(Note.COLUMN_TIMESTAMP,note.getTimestamp());
+//        }
 
         // insert row
         long id = db.insert(Note.TABLE_NAME, null, values);
