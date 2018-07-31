@@ -1,12 +1,12 @@
 package dg.gautam.deepak.notes;
 
-import android.content.ClipData;
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity
     TextView noNotesView;
     TextView timeStamp;
     private  Menu menu;
+    public int actionState;
+    public float changeInX=0;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String columnCount = "numberOfColumns";
@@ -109,7 +111,8 @@ public class MainActivity extends AppCompatActivity
         // if you want both Right -> Left and Left -> Right
         // add pass ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT as param
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+        final ItemTouchHelper itemTouchHelper= new ItemTouchHelper(itemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         recyclerView.addOnItemTouchListener(new NotesRecyclerTouchListener(getApplicationContext(), recyclerView, new NotesRecyclerTouchListener.ClickListener() {
             @Override
@@ -123,7 +126,14 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onLongClick(View view, int position) {
-
+                if(changeInX>-1) {
+                    Note note = notesList.get(position);
+                    Toast.makeText(getApplicationContext(), note.getTitle() + " is log pressed!", Toast.LENGTH_SHORT).show();
+                    View sheetView = MainActivity.this.getLayoutInflater().inflate(R.layout.view_bottom_sheet_dialog, null);
+                    BottomSheetDialog dialog = new BottomSheetDialog(MainActivity.this);
+                    dialog.setContentView(sheetView);
+                    dialog.show();
+                }
             }
         }));
 
@@ -250,6 +260,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        int k=5;
         if (viewHolder instanceof NotesRecyclerViewAdapter.MyViewHolder) {
             // get the removed item name to display it in snack bar
             String name = notesList.get(viewHolder.getAdapterPosition()).getTitle();
@@ -289,6 +300,12 @@ public class MainActivity extends AppCompatActivity
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.show();
         }
+    }
+
+    public void onChildDraw(int actionState1, float dX){
+        actionState = actionState1;
+        changeInX= dX;
+
     }
 
 

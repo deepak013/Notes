@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
+import dg.gautam.deepak.notes.MainActivity;
+
 /**
  * Created by ravi on 29/09/17.
  */
@@ -54,6 +56,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
         getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
                 actionState, isCurrentlyActive);
+        listener.onChildDraw(actionState, dX);
     }
 
     @Override
@@ -68,5 +71,6 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     public interface RecyclerItemTouchHelperListener {
         void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position);
+        void onChildDraw(int actionState, float dx);
     }
 }

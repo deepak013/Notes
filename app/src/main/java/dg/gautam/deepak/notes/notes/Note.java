@@ -17,6 +17,7 @@ public class Note implements Serializable{
     public static final String COLUMN_ISFAVOURITE = "isFavorite";
     public static final String COLUMN_ISINTRASH = "isInTrash";
     public static final String COLUMN_ISDELETED = "isDeleted";
+    public static final String COLUMN_LASTEDITED = "lastEdited";
 
     private int id;
     private String content;

@@ -11,8 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jaredrummler.android.colorpicker.ColorPickerDialog;
-import com.jaredrummler.android.colorpicker.ColorPickerDialogListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ import dg.gautam.deepak.notes.notes.Note;
 import dg.gautam.deepak.notes.notes.NotesDatabaseHelper;
 import dg.gautam.deepak.notes.notes.NotesRecyclerViewAdapter;
 
-public class AddNotes extends AppCompatActivity implements ColorPickerDialogListener {
+public class AddNotes extends AppCompatActivity {
     NotesDatabaseHelper db;
     private NotesRecyclerViewAdapter mAdapter;
     private Note note;
@@ -67,14 +65,8 @@ public class AddNotes extends AppCompatActivity implements ColorPickerDialogList
                 makeNote();
                 this.finish();
                 return true;
-            case R.id.color_picker_menu:
-                ColorPickerDialog.newBuilder()
-                        .setDialogType(ColorPickerDialog.STYLE_NORMAL)
-                        .setAllowPresets(false)
-                        .setDialogId(DIALOG_ID)
-                        .setColor(Color.BLACK)
-                        .setShowAlphaSlider(true)
-                        .show(this);
+//            case R.id.color_picker_menu:
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -120,17 +112,5 @@ public class AddNotes extends AppCompatActivity implements ColorPickerDialogList
         createNote();
     }
 
-    @Override public void onColorSelected(int dialogId, int color) {
-        switch (dialogId) {
-            case DIALOG_ID:
-                // We got result from the dialog that is shown when clicking on the icon in the action bar.
-                Toast.makeText(AddNotes.this, "Selected Color: #" + Integer.toHexString(color), Toast.LENGTH_SHORT).show();
-                break;
-        }
-    }
-
-    @Override public void onDialogDismissed(int dialogId) {
-
-    }
 
 }

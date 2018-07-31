@@ -1,6 +1,5 @@
 package dg.gautam.deepak.notes.notes;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;

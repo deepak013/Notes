@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jaredrummler.android.colorpicker.ColorPickerDialog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
