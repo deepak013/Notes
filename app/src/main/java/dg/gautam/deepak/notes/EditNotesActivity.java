@@ -1,7 +1,7 @@
 package dg.gautam.deepak.notes;
 
 import android.content.Intent;
-import android.graphics.Color;
+import android.icu.util.TimeZone;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
@@ -45,6 +46,7 @@ public class EditNotesActivity extends AppCompatActivity {
         db = new NotesDatabaseHelper(this);
         //mAdapter = new NotesRecyclerViewAdapter(this, notesList);
         lastEditedText=findViewById(R.id.lastEditedTextView);
+        Calendar cal = Calendar.getInstance();
 
         try{
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

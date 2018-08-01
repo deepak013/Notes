@@ -13,7 +13,7 @@
         android:id="@+id/action_two_column"
         android:title="Two columns"
         android:orderInCategory="100"
-        android:icon="@drawable/ic_view_quilt"
+        android:icon="@drawable/ic_view_quilt_white_24dp"
         app:showAsAction="always" />
 
     <item

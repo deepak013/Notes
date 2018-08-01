@@ -157,10 +157,10 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem item = menu.findItem(R.id.action_two_column);
         if(numberOfColumns==2){
-            item.setIcon(getResources().getDrawable(R.drawable.ic_view_stream));
+            item.setIcon(getResources().getDrawable(R.drawable.ic_view_stream_white_24dp));
         }
         else{
-            item.setIcon(getResources().getDrawable(R.drawable.ic_view_quilt));
+            item.setIcon(getResources().getDrawable(R.drawable.ic_view_quilt_white_24dp));
         }
         return true;
     }
@@ -179,12 +179,12 @@ public class MainActivity extends AppCompatActivity
         if(id == R.id.action_two_column){
             if(numberOfColumns ==1) {
                 numberOfColumns =2;
-                item.setIcon(getResources().getDrawable(R.drawable.ic_view_stream));
+                item.setIcon(getResources().getDrawable(R.drawable.ic_view_stream_white_24dp));
                 Log.d("columnCount", "onOptionsItemSelected: "+sharedpreferences.getInt(columnCount,1));
             }
             else{
                 numberOfColumns =1;
-                item.setIcon(getResources().getDrawable(R.drawable.ic_view_quilt));
+                item.setIcon(getResources().getDrawable(R.drawable.ic_view_quilt_white_24dp));
                 Log.d("columnCount", "onOptionsItemSelected: "+sharedpreferences.getInt(columnCount,1));
             }
             recyclerView.setLayoutManager(new StaggeredGridLayoutManager(numberOfColumns, StaggeredGridLayoutManager.VERTICAL));
