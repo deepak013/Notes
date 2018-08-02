@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -27,7 +26,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,9 +47,8 @@ public class MainActivity extends AppCompatActivity
     private int numberOfColumns;
     TextView noNotesView;
     TextView timeStamp;
-    private  Menu menu;
-    public int actionState;
-    public float changeInX=0;
+    Boolean isMoving=false;
+    BottomSheetDialog dialog;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String columnCount = "numberOfColumns";
@@ -126,14 +123,15 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onLongClick(View view, int position) {
-                if(changeInX>-1) {
+                if(!isMoving) {
                     Note note = notesList.get(position);
                     Toast.makeText(getApplicationContext(), note.getTitle() + " is log pressed!", Toast.LENGTH_SHORT).show();
                     View sheetView = MainActivity.this.getLayoutInflater().inflate(R.layout.view_bottom_sheet_dialog, null);
-                    BottomSheetDialog dialog = new BottomSheetDialog(MainActivity.this);
+                    dialog = new BottomSheetDialog(MainActivity.this);
                     dialog.setContentView(sheetView);
                     dialog.show();
                 }
+                isMoving=false;
             }
         }));
 
@@ -260,7 +258,6 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        int k=5;
         if (viewHolder instanceof NotesRecyclerViewAdapter.MyViewHolder) {
             // get the removed item name to display it in snack bar
             String name = notesList.get(viewHolder.getAdapterPosition()).getTitle();
@@ -286,6 +283,7 @@ public class MainActivity extends AppCompatActivity
                     if(deletedIndex == 0) {
                         recyclerView.smoothScrollToPosition(0);
                     }
+                    isMoving=false;
                 }
             }).addCallback(new Snackbar.Callback() {
                 @Override
@@ -295,6 +293,7 @@ public class MainActivity extends AppCompatActivity
                     if(dismissType == DISMISS_EVENT_TIMEOUT || dismissType == DISMISS_EVENT_SWIPE
                             || dismissType == DISMISS_EVENT_CONSECUTIVE || dismissType == DISMISS_EVENT_MANUAL)
                         db.deleteNote(deletedItem);  //delete from database if undo is not pressed
+                    isMoving=false;
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);
@@ -302,10 +301,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void onChildDraw(int actionState1, float dX){
-        actionState = actionState1;
-        changeInX= dX;
+    public void onChildDraw(int actionState, float dX, boolean isCurrentlyActive){
+        Log.d("ActionState", "onChildDraw: "+isCurrentlyActive+" "+dX);
+        isMoving =true;
+        if(isCurrentlyActive==false && dX==0) resetIsMoving();
+    }
 
+    public  void resetIsMoving(){
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        isMoving=false;
+                    }
+                },
+                500
+        );
     }
 
 

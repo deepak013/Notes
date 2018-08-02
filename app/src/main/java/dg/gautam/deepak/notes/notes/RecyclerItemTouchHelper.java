@@ -56,7 +56,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
         getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
                 actionState, isCurrentlyActive);
-        listener.onChildDraw(actionState, dX);
+        listener.onChildDraw(actionState, dX, isCurrentlyActive);
     }
 
     @Override
@@ -71,6 +71,6 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     public interface RecyclerItemTouchHelperListener {
         void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position);
-        void onChildDraw(int actionState, float dx);
+        void onChildDraw(int actionState, float dx, boolean isCurrentlyActive);
     }
 }
