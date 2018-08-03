@@ -293,6 +293,7 @@ public class MainActivity extends AppCompatActivity
                     if(dismissType == DISMISS_EVENT_TIMEOUT || dismissType == DISMISS_EVENT_SWIPE
                             || dismissType == DISMISS_EVENT_CONSECUTIVE || dismissType == DISMISS_EVENT_MANUAL)
                         db.deleteNote(deletedItem);  //delete from database if undo is not pressed
+                    toggleEmptyNotes();
                     isMoving=false;
                 }
             });
