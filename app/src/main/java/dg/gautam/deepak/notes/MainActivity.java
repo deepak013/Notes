@@ -132,13 +132,19 @@ public class MainActivity extends AppCompatActivity
             public void onLongClick(View view, int position) {
                 if(!isMoving) {
                     final Note note = notesList.get(position);
+                    View sheetView;
                     //Toast.makeText(getApplicationContext(), note.getTitle() + " is log pressed!", Toast.LENGTH_SHORT).show();
-                    View sheetView = MainActivity.this.getLayoutInflater().inflate(R.layout.view_bottom_sheet_dialog, null);
+                    if(currentView=="trash"){
+                        sheetView = MainActivity.this.getLayoutInflater().inflate(R.layout.view_bottom_sheet_trash, null);
+                    }
+                    else {
+                        sheetView = MainActivity.this.getLayoutInflater().inflate(R.layout.view_bottom_sheet_dialog, null);
+                    }
                     bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
                     bottomSheetDialog.setContentView(sheetView);
                     bottomSheetDialog.show();
                     addOrRemoveFavourite = bottomSheetDialog.findViewById(R.id.addOrRemoveFavourite);
-                    if(note.getIsFavourite()==1){
+                    if(note.getIsFavourite()==1 && currentView!="trash"){
                         addOrRemoveFavourite.setText("Remove From Favourite");
                     }
                     longClickposition=position;
@@ -336,11 +342,13 @@ public class MainActivity extends AppCompatActivity
                             || dismissType == DISMISS_EVENT_CONSECUTIVE || dismissType == DISMISS_EVENT_MANUAL)
                         if(deletedItem.getIsInTrash()==1) {
                             db.deleteNote(deletedItem);  //delete from database if undo is not pressed
+                            Toast.makeText(getApplicationContext(), "Item deleted!", Toast.LENGTH_SHORT).show();
                         }
                         else {
                          deletedItem.setIsInTrash(1);
                          db.updateNote(deletedItem);
                          madapter.notifyDataSetChanged();
+                            Toast.makeText(getApplicationContext(), "Item sent to trash!", Toast.LENGTH_SHORT).show();
                         }
                     toggleEmptyNotes();
                     isMoving=false;
@@ -382,6 +390,32 @@ public class MainActivity extends AppCompatActivity
             //Toast.makeText(getApplicationContext(), note.getTitle() + " is REmoved from favourite!", Toast.LENGTH_SHORT).show();
         }
         db.updateNote(note);
+    }
+
+    public  void deleteNote(View view){
+        Note deletedItem = notesList.get(longClickposition);
+        if(deletedItem.getIsInTrash()==1) {
+            db.deleteNote(deletedItem);  //delete from database if undo is not pressed
+            Toast.makeText(getApplicationContext(), "Item deleted!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            deletedItem.setIsInTrash(1);
+            db.updateNote(deletedItem);
+            Toast.makeText(getApplicationContext(), "Item sent to trash!", Toast.LENGTH_SHORT).show();
+        }
+        toggleEmptyNotes();
+        bottomSheetDialog.dismiss();
+        madapter.removeItem(longClickposition);
+        madapter.notifyDataSetChanged();
+    }
+
+    public void restoreClicked(View view){
+        Note note = notesList.get(longClickposition);
+        note.setIsInTrash(0);
+        db.updateNote(note);
+        madapter.removeItem(longClickposition);
+        madapter.notifyDataSetChanged();
+        bottomSheetDialog.dismiss();
     }
 
 }

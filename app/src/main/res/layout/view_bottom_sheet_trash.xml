@@ -5,28 +5,28 @@
     android:layout_height="match_parent"
     android:padding="@dimen/card_button_margin">
 
-   <LinearLayout
-       android:id="@+id/layout1"
-       android:layout_width="0dp"
-       android:orientation="vertical"
-       android:gravity="center"
-       android:layout_height="wrap_content"
-       android:layout_weight="1"
-       android:padding="8dp">
-       <ImageView
-           android:id="@+id/favouriteOnBottomSheet"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:src="@drawable/ic_heart_black_24dp"
-           android:clickable="true"
-           android:onClick="favButtonClicked"/>
-       <TextView
-           android:id="@+id/addOrRemoveFavourite"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textColor="@color/black"
-           android:text="Add to Favourite"/>
-   </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:layout_width="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="8dp">
+        <ImageView
+            android:id="@+id/restoreOnBottomSheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_restore_black_24dp"
+            android:clickable="true"
+            android:onClick="restoreClicked"/>
+        <TextView
+            android:id="@+id/restoreText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Restore Item"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:text="Delete"/>
+            android:text="Delete Permanently"/>
     </LinearLayout>
 
 </LinearLayout>
