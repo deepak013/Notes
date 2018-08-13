@@ -24,9 +24,10 @@ public class Note implements Serializable{
     private String title;
     private String timestamp;
     private  String background;
-    private Boolean isFavourite;
-    private Boolean isInTrash;
-    private  Boolean isDeleted;
+    private int isFavourite;
+    private int isInTrash;
+    private int isDeleted;
+    private String lastEdited;
 
     // Create table SQL query
     public static final String CREATE_TABLE =
@@ -35,18 +36,26 @@ public class Note implements Serializable{
                     + COLUMN_TITLE + " TEXT,"
                     + COLUMN_CONTENT + " TEXT,"
                     + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP, "
-                    + COLUMN_BACKGROUND + " TEXT"
+                    + COLUMN_BACKGROUND + " TEXT, "
+                    + COLUMN_ISFAVOURITE + " INTEGER, "
+                    + COLUMN_ISINTRASH  + " INTEGER, "
+                    + COLUMN_ISDELETED + " INTEGER, "
+                    + COLUMN_LASTEDITED + " TEXT"
                     + ")";
 
     public Note() {
     }
 
-    public Note(int id, String title, String note, String timestamp, String background) {
+    public Note(int id, String title, String note, String timestamp, String background, int favBool,int trashBool,int deleteBool, String lastEdit) {
         this.id = id;
         this.title= title;
         this.content = note;
         this.timestamp = timestamp;
         this.background = background;
+        this.isFavourite = favBool;
+        this.isDeleted =deleteBool;
+        this.isInTrash =trashBool;
+        this.lastEdited= lastEdit;
     }
 
     public int getId() {
@@ -69,6 +78,20 @@ public class Note implements Serializable{
         return background;
     }
 
+    public int getIsFavourite() {
+        return isFavourite;
+    }
+
+    public int getIsInTrash() {
+        return isInTrash;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public  String getLastEdited(){return  lastEdited;}
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -87,5 +110,19 @@ public class Note implements Serializable{
 
     public void setBackground(String background) {
         this.background = background;
+    }
+
+    public void setIsFavourite(int isFavourite) {
+        this.isFavourite = isFavourite;
+    }
+
+    public void setIsInTrash(int isInTrash) {
+        this.isInTrash = isInTrash;
+    }
+
+    public void setIsDeleted(int isDeleted) {this.isDeleted=isDeleted;}
+
+    public void setLastEdited(String lastEdited) {
+        this.lastEdited = lastEdited;
     }
 }

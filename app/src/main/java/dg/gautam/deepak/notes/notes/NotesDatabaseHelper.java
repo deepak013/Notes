@@ -56,6 +56,10 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
         values.put(Note.COLUMN_TITLE,note.getTitle());
         values.put(Note.COLUMN_CONTENT,note.getContent() );
         values.put(Note.COLUMN_BACKGROUND,note.getBackground());
+        values.put(Note.COLUMN_ISFAVOURITE,note.getIsFavourite());
+        values.put(Note.COLUMN_ISINTRASH,note.getIsInTrash());
+        values.put(Note.COLUMN_ISDELETED,note.getIsDeleted());
+        values.put(Note.COLUMN_LASTEDITED,note.getLastEdited());
         Log.d("timestamp....", "createNote: "+note.getTimestamp());
 //        if(note.getTimestamp()!=null){  //code to handle undo delete case
 //            values.put(Note.COLUMN_TIMESTAMP,note.getTimestamp());
@@ -76,7 +80,9 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(Note.TABLE_NAME,
-                new String[]{Note.COLUMN_ID, Note.COLUMN_TITLE, Note.COLUMN_CONTENT, Note.COLUMN_TIMESTAMP, Note.COLUMN_BACKGROUND},
+                new String[]{Note.COLUMN_ID, Note.COLUMN_TITLE, Note.COLUMN_CONTENT, Note.COLUMN_TIMESTAMP,
+                        Note.COLUMN_BACKGROUND, Note.COLUMN_ISFAVOURITE,Note.COLUMN_ISINTRASH,Note.COLUMN_ISDELETED,
+                        Note.COLUMN_LASTEDITED},
                 Note.COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
@@ -89,7 +95,12 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_CONTENT)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_TITLE)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_TIMESTAMP)),
-                cursor.getString(cursor.getColumnIndex(Note.COLUMN_BACKGROUND)));
+                cursor.getString(cursor.getColumnIndex(Note.COLUMN_BACKGROUND)),
+                cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ISFAVOURITE)),
+                cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ISINTRASH)),
+                cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ISDELETED)),
+                cursor.getString(cursor.getColumnIndex(Note.COLUMN_LASTEDITED))
+        );
 
         // close the db connection
         cursor.close();
@@ -97,7 +108,7 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
         return note;
     }
 
-    public List<Note> getAllNotes() {
+    public List<Note> getAllNotes(String filter) {
         List<Note> notes = new ArrayList<>();
 
         // Select All Query
@@ -117,8 +128,17 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
                 note.setTimestamp(cursor.getString(cursor.getColumnIndex(Note.COLUMN_TIMESTAMP)));
                 Log.d("SetBackground", "getAllNotes: "+cursor.getString(cursor.getColumnIndex(Note.COLUMN_BACKGROUND)));
                 note.setBackground(cursor.getString(cursor.getColumnIndex(Note.COLUMN_BACKGROUND)));
-
-                notes.add(note);
+                note.setIsFavourite(cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ISFAVOURITE)));
+                note.setIsInTrash(cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ISINTRASH)));
+                note.setIsDeleted(cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ISDELETED)));
+                note.setLastEdited(cursor.getString(cursor.getColumnIndex(Note.COLUMN_LASTEDITED)));
+                if(filter=="fav"){
+                    if(note.getIsInTrash()==0 && note.getIsFavourite()==1)notes.add(note);
+                }
+                else if(filter=="trash"){
+                    if(note.getIsInTrash()==1)notes.add(note);
+                }
+                else if(note.getIsInTrash()==0)notes.add(note);
             } while (cursor.moveToNext());
         }
 
@@ -149,6 +169,10 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
         values.put(Note.COLUMN_TITLE, note.getTitle());
         values.put(Note.COLUMN_CONTENT, note.getContent());
         values.put(Note.COLUMN_BACKGROUND, note.getBackground());
+        values.put(Note.COLUMN_ISFAVOURITE, note.getIsFavourite());
+        values.put(Note.COLUMN_ISINTRASH, note.getIsInTrash());
+        values.put(Note.COLUMN_ISDELETED, note.getIsDeleted());
+        values.put(Note.COLUMN_LASTEDITED, note.getLastEdited());
 
         // updating row
         return db.update(Note.TABLE_NAME, values, Note.COLUMN_ID + " = ?",
@@ -163,11 +187,14 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void sendNoteToTrash(Note note){
-        //make isInTrash = true
+        note.setIsInTrash(1);
     }
 
     public void toggleFavourite(Note note){
-        //make isFavorite = true
+        if(note.getIsFavourite() ==0){
+            note.setIsFavourite(1);
+        }
+        else note.setIsFavourite(0);
     }
 }
 

@@ -11,27 +11,27 @@
             android:title="All Notes" />
 
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_favourite"
             android:icon="@drawable/ic_heart_black_24dp"
             android:title="Favourite" />
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_trash"
             android:icon="@drawable/ic_delete_black_24dp"
             android:title="Trash" />
 
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
+    <!--<item android:title="Communicate">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_share"-->
+                <!--android:icon="@drawable/ic_menu_share"-->
+                <!--android:title="Share" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_send"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="Send" />-->
+        <!--</menu>-->
+    <!--</item>-->
 
 </menu>

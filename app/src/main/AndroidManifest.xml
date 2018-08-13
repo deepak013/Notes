@@ -20,7 +20,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddNotes" />
-        <activity android:name=".EditNotesActivity"></activity>
+        <activity android:name=".EditNotesActivity" />
+        <activity
+            android:name=".notes.FavouriteNotes"
+            android:label="@string/title_activity_favourite_notes"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AboutActivity"></activity>
     </application>
 
 </manifest>

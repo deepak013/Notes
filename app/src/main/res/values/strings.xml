@@ -6,4 +6,6 @@
     <string name="notes_default">A quick brown fox jumps over the lazy dog.</string>
     <string name="action_settings">Settings</string>
     <string name="delete">DELETE</string>
+    <string name="title_activity_favourite_notes">Favourites</string>
+    <string name="versionNumber">Version 1.0</string>
 </resources>

@@ -54,12 +54,12 @@
             android:layout_height="1dp"
             android:background="@color/gray"/>
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ic_info_black_24dp" />
+        <!--<ImageView-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:background="@drawable/ic_info_black_24dp" />-->
 
         <TextView
             android:id="@+id/lastEditedTextView"

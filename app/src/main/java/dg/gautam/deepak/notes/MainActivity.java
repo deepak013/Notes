@@ -23,12 +23,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import dg.gautam.deepak.notes.notes.Note;
 import dg.gautam.deepak.notes.notes.NotesDatabaseHelper;
 import dg.gautam.deepak.notes.notes.NotesRecyclerTouchListener;
@@ -48,7 +48,14 @@ public class MainActivity extends AppCompatActivity
     TextView noNotesView;
     TextView timeStamp;
     Boolean isMoving=false;
-    BottomSheetDialog dialog;
+    BottomSheetDialog bottomSheetDialog;
+    ImageView bottomSheetFav;
+    TextView addOrRemoveFavourite;
+    private  int longClickposition=5;
+    Toolbar toolbar;
+    Boolean favViewVisiable = false;
+    String currentView = "allNotes";
+    FloatingActionButton fab;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String columnCount = "numberOfColumns";
@@ -57,7 +64,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -68,10 +75,10 @@ public class MainActivity extends AppCompatActivity
         //get notes from DB
         db = new NotesDatabaseHelper(this);
         //db.onUpgrade(db, 1,2);
-        notesList.addAll(db.getAllNotes());
+        notesList.addAll(db.getAllNotes("all"));
         toggleEmptyNotes();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,18 +125,23 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(getApplicationContext(), EditNotesActivity.class);
                 intent.putExtra("note", note);
                 startActivity(intent);
-                Toast.makeText(getApplicationContext(), note.getTitle() + " is selected!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), note.getTitle() + " is selected!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onLongClick(View view, int position) {
                 if(!isMoving) {
-                    Note note = notesList.get(position);
-                    Toast.makeText(getApplicationContext(), note.getTitle() + " is log pressed!", Toast.LENGTH_SHORT).show();
+                    final Note note = notesList.get(position);
+                    //Toast.makeText(getApplicationContext(), note.getTitle() + " is log pressed!", Toast.LENGTH_SHORT).show();
                     View sheetView = MainActivity.this.getLayoutInflater().inflate(R.layout.view_bottom_sheet_dialog, null);
-                    dialog = new BottomSheetDialog(MainActivity.this);
-                    dialog.setContentView(sheetView);
-                    dialog.show();
+                    bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
+                    bottomSheetDialog.setContentView(sheetView);
+                    bottomSheetDialog.show();
+                    addOrRemoveFavourite = bottomSheetDialog.findViewById(R.id.addOrRemoveFavourite);
+                    if(note.getIsFavourite()==1){
+                        addOrRemoveFavourite.setText("Remove From Favourite");
+                    }
+                    longClickposition=position;
                 }
                 isMoving=false;
             }
@@ -171,8 +183,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_about) {
+            Intent i =new Intent(this, AboutActivity.class);
+            startActivity(i);
         }
         if(id == R.id.action_two_column){
             if(numberOfColumns ==1) {
@@ -197,14 +210,43 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.all_notes) {
+            if(currentView!="allNotes"){
+                fab.setVisibility(View.VISIBLE);
+                currentView="allNotes";
+                toolbar.setTitle("Notes");
+                notesList.clear();
+                notesList.addAll(db.getAllNotes("all"));
+                madapter = new NotesRecyclerViewAdapter(this, notesList);
+                madapter.notifyDataSetChanged();
+                recyclerView.setAdapter(madapter);
+                recyclerView.smoothScrollToPosition(0);
+            }
+        }
+        if (id == R.id.nav_favourite) {
+            if(currentView!="fav") {
+                fab.setVisibility(View.VISIBLE);
+                currentView="fav";
+                toolbar.setTitle("Favourite");
+                notesList.clear();
+                notesList.addAll(db.getAllNotes("fav"));
+                madapter = new NotesRecyclerViewAdapter(this, notesList);
+                madapter.notifyDataSetChanged();
+                recyclerView.setAdapter(madapter);
+                recyclerView.smoothScrollToPosition(0);
+            }
+        } else if (id == R.id.nav_trash) {
+            if(currentView!="trash"){
+                fab.setVisibility(View.INVISIBLE);
+                currentView="trash";
+                toolbar.setTitle("Trash");
+                notesList.clear();
+                notesList.addAll(db.getAllNotes("trash"));
+                madapter = new NotesRecyclerViewAdapter(this, notesList);
+                madapter.notifyDataSetChanged();
+                recyclerView.setAdapter(madapter);
+                recyclerView.smoothScrollToPosition(0);
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -232,7 +274,7 @@ public class MainActivity extends AppCompatActivity
     public void onResume(){
         super.onResume();
         notesList.clear();
-        notesList.addAll(db.getAllNotes());
+        notesList.addAll(db.getAllNotes("all"));
         madapter.notifyDataSetChanged();
         noNotesView = (TextView)findViewById(R.id.empty_notes_view);
         toggleEmptyNotes();
@@ -292,7 +334,14 @@ public class MainActivity extends AppCompatActivity
 
                     if(dismissType == DISMISS_EVENT_TIMEOUT || dismissType == DISMISS_EVENT_SWIPE
                             || dismissType == DISMISS_EVENT_CONSECUTIVE || dismissType == DISMISS_EVENT_MANUAL)
-                        db.deleteNote(deletedItem);  //delete from database if undo is not pressed
+                        if(deletedItem.getIsInTrash()==1) {
+                            db.deleteNote(deletedItem);  //delete from database if undo is not pressed
+                        }
+                        else {
+                         deletedItem.setIsInTrash(1);
+                         db.updateNote(deletedItem);
+                         madapter.notifyDataSetChanged();
+                        }
                     toggleEmptyNotes();
                     isMoving=false;
                 }
@@ -320,5 +369,19 @@ public class MainActivity extends AppCompatActivity
         );
     }
 
+    public  void favButtonClicked(View view){
+        Note note = notesList.get(longClickposition);
+        if(note.getIsFavourite()==0) {
+            note.setIsFavourite(1);
+            bottomSheetDialog.dismiss();
+            //Toast.makeText(getApplicationContext(), note.getTitle() + " is Added To favourite!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            note.setIsFavourite(0);
+            bottomSheetDialog.dismiss();
+            //Toast.makeText(getApplicationContext(), note.getTitle() + " is REmoved from favourite!", Toast.LENGTH_SHORT).show();
+        }
+        db.updateNote(note);
+    }
 
 }

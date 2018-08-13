@@ -31,6 +31,7 @@ public class EditNotesActivity extends AppCompatActivity {
     NotesDatabaseHelper db;
     String lastEditedDate;
     private NotesRecyclerViewAdapter mAdapter;
+    String currentDateandTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +59,13 @@ public class EditNotesActivity extends AppCompatActivity {
             Log.d("DateParseException", "onCreate: Dtae parse exception");
         }
 
-        lastEditedText.setText("Edited "+lastEditedDate);
+        lastEditedText.setText("Edited "+note.getLastEdited());
         titleEditText.setText(note.getTitle());
         contentEditText.setText(note.getContent());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, hh:mm aaa");
+        currentDateandTime = sdf.format(new Date());
+        note.setLastEdited(currentDateandTime.toString());
 
     }
 

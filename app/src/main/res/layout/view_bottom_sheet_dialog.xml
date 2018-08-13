@@ -14,10 +14,14 @@
        android:layout_weight="1"
        android:padding="8dp">
        <ImageView
+           android:id="@+id/favouriteOnBottomSheet"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:src="@drawable/ic_heart_black_24dp"/>
+           android:src="@drawable/ic_heart_black_24dp"
+           android:clickable="true"
+           android:onClick="favButtonClicked"/>
        <TextView
+           android:id="@+id/addOrRemoveFavourite"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:textColor="@color/black"
