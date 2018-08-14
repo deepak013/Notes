@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity
         noNotesView = (TextView)findViewById(R.id.empty_notes_view);
         sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         numberOfColumns = sharedpreferences.getInt(columnCount,1);
-        timeStamp = findViewById(R.id.timestamp);
-        //get notes from DB
         db = new NotesDatabaseHelper(this);
         //db.onUpgrade(db, 1,2);
         notesList.addAll(db.getAllNotes("all"));
@@ -227,6 +225,7 @@ public class MainActivity extends AppCompatActivity
                 madapter.notifyDataSetChanged();
                 recyclerView.setAdapter(madapter);
                 recyclerView.smoothScrollToPosition(0);
+                toggleEmptyNotes();
             }
         }
         if (id == R.id.nav_favourite) {
@@ -240,6 +239,7 @@ public class MainActivity extends AppCompatActivity
                 madapter.notifyDataSetChanged();
                 recyclerView.setAdapter(madapter);
                 recyclerView.smoothScrollToPosition(0);
+                toggleEmptyNotes();
             }
         } else if (id == R.id.nav_trash) {
             if(currentView!="trash"){
@@ -252,6 +252,7 @@ public class MainActivity extends AppCompatActivity
                 madapter.notifyDataSetChanged();
                 recyclerView.setAdapter(madapter);
                 recyclerView.smoothScrollToPosition(0);
+                toggleEmptyNotes();
             }
         }
 
@@ -269,7 +270,7 @@ public class MainActivity extends AppCompatActivity
         // you can check notesList.size() > 0
 
 
-        if (db.getNotesCount() > 0) {
+        if (notesList.size() > 0) {
             noNotesView.setVisibility(View.GONE);
         } else {
             noNotesView.setVisibility(View.VISIBLE);
@@ -280,7 +281,7 @@ public class MainActivity extends AppCompatActivity
     public void onResume(){
         super.onResume();
         notesList.clear();
-        notesList.addAll(db.getAllNotes("all"));
+        notesList.addAll(db.getAllNotes(currentView));
         madapter.notifyDataSetChanged();
         noNotesView = (TextView)findViewById(R.id.empty_notes_view);
         toggleEmptyNotes();
@@ -379,15 +380,26 @@ public class MainActivity extends AppCompatActivity
 
     public  void favButtonClicked(View view){
         Note note = notesList.get(longClickposition);
+        RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(longClickposition);
+        ImageView favImage;
+            favImage = (ImageView)holder.itemView.findViewById(R.id.favImage);
         if(note.getIsFavourite()==0) {
             note.setIsFavourite(1);
             bottomSheetDialog.dismiss();
-            //Toast.makeText(getApplicationContext(), note.getTitle() + " is Added To favourite!", Toast.LENGTH_SHORT).show();
+            favImage.setImageResource(R.drawable.ic_star_white_18dp);
+            favImage.setVisibility(View.VISIBLE);
+            Toast.makeText(getApplicationContext(), "Item is Added To favourite!", Toast.LENGTH_SHORT).show();
         }
         else {
             note.setIsFavourite(0);
             bottomSheetDialog.dismiss();
-            //Toast.makeText(getApplicationContext(), note.getTitle() + " is REmoved from favourite!", Toast.LENGTH_SHORT).show();
+            favImage.setVisibility(View.INVISIBLE);
+            if(currentView=="fav"){
+                madapter.removeItem(longClickposition);
+                madapter.notifyDataSetChanged();
+            }
+            Toast.makeText(getApplicationContext(),  "Item is removed from favourite!", Toast.LENGTH_SHORT).show();
+            toggleEmptyNotes();
         }
         db.updateNote(note);
     }
@@ -416,6 +428,7 @@ public class MainActivity extends AppCompatActivity
         madapter.removeItem(longClickposition);
         madapter.notifyDataSetChanged();
         bottomSheetDialog.dismiss();
+        toggleEmptyNotes();
     }
 
 }

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,14 +38,14 @@ public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecycler
         public TextView title;
         public TextView note;
         //public TextView timestamp;
-        public CardView cardView;
+        public ImageView favImage;
         public RelativeLayout viewForeground;
 
         public MyViewHolder(View view) {
             super(view);
             title = view.findViewById(R.id.noteTitle);
             note = view.findViewById(R.id.notes_dashboard_text);
-            //timestamp = view.findViewById(R.id.timestamp);
+            favImage= view.findViewById(R.id.favImage);
             viewForeground = view.findViewById(R.id.cardRelativeLayout);
             view.setOnClickListener(this);
         }
@@ -79,7 +80,9 @@ public class NotesRecyclerViewAdapter extends RecyclerView.Adapter<NotesRecycler
         holder.title.setText(note.getTitle());
 
         holder.note.setText(note.getContent());
-//        public static int parseColor (String note.getBackground());
+        if(note.getIsFavourite()==1) {
+            holder.favImage.setImageResource(R.drawable.ic_star_white_18dp);
+        }
         Log.d("BackgroundColor", "onBindViewHolder: "+note.getBackground());
         holder.viewForeground.setBackgroundColor(Color.parseColor(note.getBackground()));
 
