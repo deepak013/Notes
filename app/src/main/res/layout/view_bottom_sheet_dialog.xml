@@ -12,19 +12,23 @@
        android:gravity="center"
        android:layout_height="wrap_content"
        android:layout_weight="1"
+       android:clickable="true"
+       android:onClick="favButtonClicked"
        android:padding="8dp">
        <ImageView
            android:id="@+id/favouriteOnBottomSheet"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
+           android:onClick="favButtonClicked"
            android:src="@drawable/ic_heart_black_24dp"
            android:clickable="true"
-           android:onClick="favButtonClicked"/>
+           />
        <TextView
            android:id="@+id/addOrRemoveFavourite"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:textColor="@color/black"
+           android:onClick="favButtonClicked"
            android:text="Add to Favourite"/>
    </LinearLayout>
 
@@ -40,12 +44,15 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="deleteNote"
             android:src="@drawable/ic_delete_black_24dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Delete"
+            android:onClick="deleteNote"
             android:textColor="@color/black"
-            android:text="Delete"/>
+            />
     </LinearLayout>
 
 </LinearLayout>

@@ -61,7 +61,7 @@ public class AddNotes extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.notes_menu,menu);
+        getMenuInflater().inflate(R.menu.add_edit_menu,menu);
         return  true;
     }
 
@@ -72,8 +72,13 @@ public class AddNotes extends AppCompatActivity {
                 makeNote();
                 this.finish();
                 return true;
-//            case R.id.color_picker_menu:
-
+            case R.id.action_save_note:
+                makeNote();
+                this.finish();
+                return true;
+            case R.id.action_discard_note:
+                this.finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -121,7 +126,7 @@ public class AddNotes extends AppCompatActivity {
         note.setIsDeleted(0);
         note.setLastEdited(currentDateandTime.toString());
         if(contentString.trim().equals("")){
-            Toast.makeText(getApplicationContext(), "Note Content cant be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Note Content can't be empty", Toast.LENGTH_SHORT).show();
             return ;
         }
         createNote();

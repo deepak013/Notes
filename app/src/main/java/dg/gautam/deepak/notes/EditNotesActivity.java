@@ -71,7 +71,7 @@ public class EditNotesActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.notes_menu,menu);
+        getMenuInflater().inflate(R.menu.add_edit_menu,menu);
         return  true;
     }
 
@@ -80,6 +80,13 @@ public class EditNotesActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 modifyNote();
+                this.finish();
+                return true;
+            case R.id.action_save_note:
+                modifyNote();
+                this.finish();
+                return true;
+            case R.id.action_discard_note:
                 this.finish();
                 return true;
             default:

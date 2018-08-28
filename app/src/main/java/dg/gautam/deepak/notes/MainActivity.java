@@ -269,7 +269,6 @@ public class MainActivity extends AppCompatActivity
     private void toggleEmptyNotes() {
         // you can check notesList.size() > 0
 
-
         if (notesList.size() > 0) {
             noNotesView.setVisibility(View.GONE);
         } else {
