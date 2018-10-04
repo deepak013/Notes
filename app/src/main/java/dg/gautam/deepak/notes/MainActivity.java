@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     Boolean favViewVisiable = false;
     String currentView = "allNotes";
     FloatingActionButton fab;
+    boolean isLaunchedFirstTime = true;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
     public static final String columnCount = "numberOfColumns";
@@ -71,6 +72,10 @@ public class MainActivity extends AppCompatActivity
         noNotesView = (TextView)findViewById(R.id.empty_notes_view);
         sharedpreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         numberOfColumns = sharedpreferences.getInt(columnCount,1);
+        isLaunchedFirstTime= sharedpreferences.getBoolean("isLauncedFirstTime", true);
+        if(isLaunchedFirstTime==true){
+            //do somethinhg
+        }
         db = new NotesDatabaseHelper(this);
         //db.onUpgrade(db, 1,2);
         notesList.addAll(db.getAllNotes("all"));
@@ -203,6 +208,10 @@ public class MainActivity extends AppCompatActivity
                 Log.d("columnCount", "onOptionsItemSelected: "+sharedpreferences.getInt(columnCount,1));
             }
             recyclerView.setLayoutManager(new StaggeredGridLayoutManager(numberOfColumns, StaggeredGridLayoutManager.VERTICAL));
+        }
+        if(id == R.id.action_settings){
+            Intent i =new Intent(this, SettingsActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);

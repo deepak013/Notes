@@ -53,7 +53,7 @@ public class AddNotes extends AppCompatActivity {
         currentDateandTime = sdf.format(new Date());
         lastEditedText.setText("Edited "+currentDateandTime.toString());
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        numberForColor = sharedPreferences.getInt("color",0);
+        numberForColor = sharedPreferences.getInt("color",6);
         numberForColor%=8;
         note = new Note();
 
@@ -118,8 +118,6 @@ public class AddNotes extends AppCompatActivity {
         String contentString = contentEditText.getText().toString();
         note.setTitle(titleString);
         note.setContent(contentString);
-        Random rand = new Random();
-        int randomNum= rand.nextInt(8);
         note.setBackground(hexColorArray[numberForColor]);
         note.setIsFavourite(0);
         note.setIsInTrash(0);

@@ -95,6 +95,7 @@
             android:maxLines="15"
             android:ellipsize="end"
             android:justificationMode="inter_word"
+            android:fontFamily="@font/dancing_script"
             android:text="@string/notes_default"
             android:textColor="@color/white" />
 
